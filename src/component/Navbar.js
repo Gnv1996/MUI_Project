@@ -74,7 +74,6 @@ export default function NavbarWithSidebar() {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
-  const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const open = Boolean(anchorEl);
 

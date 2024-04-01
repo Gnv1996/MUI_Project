@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import bg from "../../Assest/bgwall.jpeg";
 import Grid from "@mui/material/Grid";
 import { Input, Modal } from "@mui/material";
-import { DatePicker } from "@mui/lab";
+import Date from "./Date";
 
 const styles = {
   container: {
@@ -33,18 +33,16 @@ const styles = {
     },
   },
   formContainer: {
-    position: "absolute",
-    bottom: 0,
-    left: "50%",
-    transform: "translateX(-50%)",
     zIndex: 9999,
     backgroundColor: "#FFC72C",
     padding: 5,
+    marginTop: 10,
     borderRadius: 10,
     boxShadow: "0 0 10px rgba(0, 0, 0, 0.2)",
-    width: "100%",
-    height: "auto",
-    minHeight: "300px",
+    width: "50%",
+    maxHeight: "80vh",
+    overflowY: "auto",
+    margin: "0 auto",
   },
   textContainer: {
     position: "absolute",
@@ -58,10 +56,9 @@ const styles = {
 
 export default function ContactForm() {
   const [open, setOpen] = useState(false);
-  const [arrivalDate, setArrivalDate] = useState(null);
-  const [departureDate, setDepartureDate] = useState(null);
-  const [arrivalPickerOpen, setArrivalPickerOpen] = useState(false);
-  const [departurePickerOpen, setDeparturePickerOpen] = useState(false);
+  const [selectedArrivalDate, setSelectedArrivalDate] = useState(null);
+  const [selectedEndDate, setSelectedEndDate] = useState(null);
+  const [event, setEvent] = useState(null);
 
   const handleOpen = () => {
     setOpen(true);
@@ -70,15 +67,17 @@ export default function ContactForm() {
   const handleClose = () => {
     setOpen(false);
   };
-
-  const handleArrivalDateClick = () => {
-    setArrivalPickerOpen(true);
+  const handleDateChange = (date) => {
+    setSelectedArrivalDate(date);
+  };
+  const handleEndChange = (date) => {
+    setSelectedEndDate(date);
   };
 
-  const handleDepartureDateClick = () => {
-    setDeparturePickerOpen(true);
+  const formSubmitHandler = (event) => {
+    event.preventDefault();
+    console.log(event, selectedArrivalDate, selectedEndDate);
   };
-
   return (
     <React.Fragment>
       <CssBaseline />
@@ -118,10 +117,12 @@ export default function ContactForm() {
             Find the best deals in Europe...
           </Typography>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={12}>
               <Input
                 fullWidth
                 type="text"
+                value={event}
+                onChange={(txt) => setEvent(txt.target.value)}
                 placeholder="eg. City, region, district or specific Hotel"
                 sx={{
                   backgroundColor: "white",
@@ -130,79 +131,30 @@ export default function ContactForm() {
                 }}
               />
             </Grid>
-            <Grid item xs={6} sm={3}>
-              <Input
-                fullWidth
-                type="text"
-                placeholder="Arriving Date"
-                onClick={handleArrivalDateClick}
-                onChange={(e) => setArrivalDate(e.target.value)}
-                value={
-                  arrivalDate instanceof Date
-                    ? arrivalDate.toDateString()
-                    : arrivalDate
-                }
-                sx={{
-                  backgroundColor: "white",
-                  padding: "10px",
-                  borderRadius: "7px",
-                  color: "blue",
-                }}
+            <Grid item xs={6} sm={6}>
+              <Date
+                label={"Arrival Date"}
+                value={selectedArrivalDate}
+                onDateChange={handleDateChange}
               />
-
-              {arrivalPickerOpen && (
-                <DatePicker
-                  label="Arriving Date"
-                  inputFormat="MM/dd/yyyy"
-                  value={arrivalDate}
-                  onChange={(newValue) => {
-                    setArrivalDate(newValue);
-                    setArrivalPickerOpen(false);
-                  }}
-                  onClose={() => setArrivalPickerOpen(false)}
-                  renderInput={(params) => <Input {...params} />}
-                />
-              )}
             </Grid>
-            <Grid item xs={6} sm={3}>
-              <Input
-                fullWidth
-                type="text"
-                placeholder="Leaving Date"
-                onClick={handleDepartureDateClick}
-                onChange={(e) => setDepartureDate(e.target.value)}
-                value={
-                  departureDate instanceof Date
-                    ? departureDate.toDateString()
-                    : departureDate
-                }
-                sx={{
-                  backgroundColor: "white",
-                  padding: "10px",
-                  borderRadius: "7px",
-                  color: "blue",
-                }}
+            <Grid item xs={6} sm={6}>
+              <Date
+                label={"Leaving Date"}
+                value={selectedEndDate}
+                onDateChange={handleEndChange}
               />
-              {departurePickerOpen && (
-                <DatePicker
-                  label="Leaving Date"
-                  inputFormat="MM/dd/yyyy"
-                  value={departureDate}
-                  onChange={(newValue) => {
-                    setDepartureDate(newValue);
-                    setDeparturePickerOpen(false);
-                  }}
-                  onClose={() => setDeparturePickerOpen(false)}
-                  renderInput={(params) => <Input {...params} />}
-                />
-              )}
             </Grid>
-            <Grid item xs={12} sm={9}>
-              <Button variant="contained" type="submit">
+            <Grid item xs={9} sm={9}>
+              <Button
+                variant="contained"
+                type="submit"
+                onClick={formSubmitHandler}
+              >
                 Submit
               </Button>
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={3} sm={3}>
               <Typography
                 variant="h6"
                 component="h2"
